@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadoras de Funil</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            position: relative;
+            text-align: center;
+            color: white;
+            background-color: #91262B;
+            padding: 40px 20px;
+        }
+        .header img {
+            width: 120px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+        .header h1 {
+            font-size: 24px;
+            margin-top: 10px;
+        }
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: -50px auto 30px; /* Move up the container to overlap the header */
+            position: relative;
+            z-index: 1;
+        }
+        .calculadora {
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out, height 0.5s ease-in-out;
+            max-height: 0;
+            overflow: hidden;
+        }
+        .calculadora.active {
+            opacity: 1;
+            max-height: 10000px; /* Large enough to fit content */
+        }
+        label {
+            font-size: 16px;
+            margin-bottom: 5px;
+            display: block;
+            text-align: left;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        .result {
+            font-size: 18px;
+            margin-top: 20px;
+            text-align: center;
+            padding: 10px;
+            background-color: #ffeced;
+            border: 1px solid #91262B;
+            border-radius: 5px;
+            display: none;
+        }
+        .output {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 20px;
+            color: #91262B;
+        }
+        .button-group {
+            margin: 20px 0;
+            text-align: center;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            background-color: #91262B;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #471416;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <img src="./images/econsul_logo.png" alt="Logo">
+        <h1>Escolha sua Calculadora</h1>
+    </div>
+
+    <div class="container">
+        <!-- Botões de escolha -->
+        <div class="button-group">
+            <button onclick="mostrarCalculadora('calc1')">Calculadora de Funil</button>
+            <button onclick="mostrarCalculadora('calc2')">Calculadora de Touchpoints</button>
+        </div>
+        <div class="calculadora" id="calc1">        
+            <!-- Coleta de Dados do Funil -->
+            <div class="section">
+                <h3>Coleta de Dados do Funil</h3>
+        
+                <label for="metaFaturamento">Meta de Faturamento (R$):</label>
+                <input type="number" id="metaFaturamento" placeholder="Digite o valor da meta de faturamento" oninput="calcularMetricas()">
+                
+                <label for="leadsConvertidos">Vendas realizadas:</label>
+                <input type="number" id="leadsConvertidos" placeholder="Digite o número de leads convertidos" oninput="calcularMetricas()">
+        
+                <label for="reunioesDiagnostico">Reuniões de Diagnóstico Apresentadas:</label>
+                <input type="number" id="reunioesDiagnostico" placeholder="Digite o número de reuniões de diagnóstico apresentadas" oninput="calcularMetricas()">
+                
+                <label for="propostasApresentadas">Propostas Apresentadas:</label>
+                <input type="number" id="propostasApresentadas" placeholder="Digite o número de propostas apresentadas" oninput="calcularMetricas()">
+        
+                <label for="ticketMedio">Ticket Médio (R$):</label>
+                <input type="number" id="ticketMedio" placeholder="Digite o valor do ticket médio" oninput="calcularMetricas()">
+        
+                <label for="entregaIndividual">Entregas Individuais por Membro:</label>
+                <input type="number" id="entregaIndividual" placeholder="Digite o número de entregas que cada membro pode fazer" oninput="calcularMetricas()">
+            </div>
+        
+            <!-- Resultados dos Cálculos -->
+            <div class="section">        
+                <div class="result" id="resultadoTaxaConversaoProposta">
+                    <span class="info">Taxa de Conversão de Propostas para Clientes:</span> <br>
+                    <span class="output" id="taxaConversaoProposta"></span>
+                </div>
+        
+                <div class="result" id="resultadoTaxaConversaoDiagnostico">
+                    <span class="info">Taxa de Conversão de Diagnósticos para Propostas:</span> <br>
+                    <span class="output" id="taxaConversaoDiagnostico"></span>
+                </div>
+        
+                <div class="result" id="resultadoPropostasNecessarias">
+                    <span class="info">Número de Propostas Necessárias:</span> <br>
+                    <span class="output" id="numeroPropostasNecessarias"></span>
+                </div>
+        
+                <div class="result" id="resultadoDiagnosticosNecessarios">
+                    <span class="info">Número de Diagnósticos Necessários:</span> <br>
+                    <span class="output" id="numeroDiagnosticosNecessarios"></span>
+                </div>
+        
+                <div class="result" id="resultadoPessoasNecessarias">
+                    <span class="info">Número de Membros Necessários no Time:</span> <br>
+                    <span class="output" id="numeroPessoasNecessarias"></span>
+                </div>
+            </div>
+        </div> 
+        <div class="calculadora" id="calc2">
+            <div class="section">
+                <h3>Coleta de Dados de Touchpoints</h3>
+                <label for="ponto1">Leads Convertidos no 1° Contato:</label>
+                <input type="number" id="ponto1" oninput="calcularMediaTouchpoints()">
+
+                <label for="ponto2">Leads Convertidos no 2° Contato:</label>
+                <input type="number" id="ponto2" oninput="calcularMediaTouchpoints()">
+
+                <label for="ponto3">Leads Convertidos no 3° Contato:</label>
+                <input type="number" id="ponto3" oninput="calcularMediaTouchpoints()">
+
+                <label for="ponto4">Leads Convertidos no 4° Contato:</label>
+                <input type="number" id="ponto4" oninput="calcularMediaTouchpoints()">
+
+                <label for="ponto5">Leads Convertidos no 5° Contato:</label>
+                <input type="number" id="ponto5" oninput="calcularMediaTouchpoints()">
+
+                <label for="ponto6">Leads Convertidos no 6° Contato:</label>
+                <input type="number" id="ponto6" oninput="calcularMediaTouchpoints()">
+            </div>
+            
+            <div class="section">        
+                <div class="result" id="resultadoMediaTouchpoints">
+                    <span class="info">Média de Touchpoints:</span> <br>
+                    <span class="output" id="mediaTouchpoints"></span> <br>
+                    <span class="">Essa é a quantidade de média de contatos que você faz para fechar uma venda</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function calcularMetricas() {
+            const leadsConvertidos = parseFloat(document.getElementById("leadsConvertidos").value);
+            const propostasApresentadas = parseFloat(document.getElementById("propostasApresentadas").value);
+            const reunioesDiagnostico = parseFloat(document.getElementById("reunioesDiagnostico").value);
+            const ticketMedio = parseFloat(document.getElementById("ticketMedio").value);
+            const metaFaturamento = parseFloat(document.getElementById("metaFaturamento").value);
+            const entregaIndividual = parseFloat(document.getElementById("entregaIndividual").value);
+    
+            // Cálculo da Taxa de Conversão de Propostas para Clientes
+            let taxaConversaoProposta = 0;
+            if (!isNaN(propostasApresentadas) && propostasApresentadas > 0) {
+                taxaConversaoProposta = (leadsConvertidos / propostasApresentadas) * 100;
+                document.getElementById("taxaConversaoProposta").innerText = `${taxaConversaoProposta.toFixed(2)}%`;
+                document.getElementById("resultadoTaxaConversaoProposta").style.display = 'block';
+            } else {
+                document.getElementById("resultadoTaxaConversaoProposta").style.display = 'none';
+            }
+    
+            // Cálculo da Taxa de Conversão de Diagnósticos para Propostas
+            let taxaConversaoDiagnostico = 0;
+            if (!isNaN(reunioesDiagnostico) && reunioesDiagnostico > 0) {
+                taxaConversaoDiagnostico = (propostasApresentadas / reunioesDiagnostico) * 100;
+                document.getElementById("taxaConversaoDiagnostico").innerText = `${taxaConversaoDiagnostico.toFixed(2)}%`;
+                document.getElementById("resultadoTaxaConversaoDiagnostico").style.display = 'block';
+            } else {
+                document.getElementById("resultadoTaxaConversaoDiagnostico").style.display = 'none';
+            }
+    
+            // Cálculo do Número de Propostas Necessárias
+            let numeroPropostasNecessarias = 0;
+            if (!isNaN(metaFaturamento) && !isNaN(ticketMedio) && ticketMedio > 0 && taxaConversaoProposta > 0) {
+                numeroPropostasNecessarias = metaFaturamento / (taxaConversaoProposta / 100 * ticketMedio);
+                document.getElementById("numeroPropostasNecessarias").innerText = `${Math.ceil(numeroPropostasNecessarias)}`;
+                document.getElementById("resultadoPropostasNecessarias").style.display = 'block';
+            } else {
+                document.getElementById("resultadoPropostasNecessarias").style.display = 'none';
+            }
+    
+            // Cálculo do Número de Diagnósticos Necessários
+            let numeroDiagnosticosNecessarios = 0;
+            if (numeroPropostasNecessarias > 0 && taxaConversaoDiagnostico > 0) {
+                numeroDiagnosticosNecessarios = numeroPropostasNecessarias / (taxaConversaoDiagnostico / 100);
+                document.getElementById("numeroDiagnosticosNecessarios").innerText = `${Math.ceil(numeroDiagnosticosNecessarios)}`;
+                document.getElementById("resultadoDiagnosticosNecessarios").style.display = 'block';
+            } else {
+                document.getElementById("resultadoDiagnosticosNecessarios").style.display = 'none';
+            }
+    
+            // Cálculo do Número de Membros Necessários no Time
+            let numeroPessoasNecessarias = 0;
+            if (numeroDiagnosticosNecessarios > 0 && entregaIndividual > 0) {
+                numeroPessoasNecessarias = Math.ceil(numeroDiagnosticosNecessarios / entregaIndividual);
+                document.getElementById("numeroPessoasNecessarias").innerText = `${numeroPessoasNecessarias}`;
+                document.getElementById("resultadoPessoasNecessarias").style.display = 'block';
+            } else {
+                document.getElementById("resultadoPessoasNecessarias").style.display = 'none';
+            }
+        }
+    </script>
+
+    <script>
+        function calcularMediaTouchpoints() {
+            const ponto1 = parseFloat(document.getElementById("ponto1").value) || 0;
+            const ponto2 = parseFloat(document.getElementById("ponto2").value) || 0;
+            const ponto3 = parseFloat(document.getElementById("ponto3").value) || 0;
+            const ponto4 = parseFloat(document.getElementById("ponto4").value) || 0;
+            const ponto5 = parseFloat(document.getElementById("ponto5").value) || 0;
+            const ponto6 = parseFloat(document.getElementById("ponto6").value) || 0;
+
+            const totalDeContatos = ponto1*1 + ponto2*2 + ponto3*3 + ponto4*4 + ponto5*5 + ponto6*6;
+            const totalDeLeadsConvertidos = ponto1 + ponto2 + ponto3 + ponto4 + ponto5 + ponto6;
+
+            // Cálculo da Média de Touchpoints por Lead
+            let mediaTouchpoints = 0;
+            if (totalDeLeadsConvertidos > 0) {
+                mediaTouchpoints = totalDeContatos / totalDeLeadsConvertidos;
+                document.getElementById("mediaTouchpoints").innerText = `${mediaTouchpoints.toFixed(2)}`;
+                document.getElementById("resultadoMediaTouchpoints").style.display = 'block';
+            } else {
+                document.getElementById("resultadoMediaTouchpoints").style.display = 'none';
+            }
+        }
+    </script>
+
+    <script>
+    
+        function mostrarCalculadora(calc) {
+            const calculadoras = document.querySelectorAll('.calculadora');
+            calculadoras.forEach(c => {
+                c.classList.remove('active');
+            });
+            document.getElementById(calc).classList.add('active');
+        }
+    </script>
+    
+
+</body>
+</html>
