@@ -109,6 +109,8 @@
         <div class="button-group">
             <button onclick="mostrarCalculadora('calc1')">Calculadora de Funil</button>
             <button onclick="mostrarCalculadora('calc2')">Calculadora de Touchpoints</button>
+            <button onclick="mostrarCalculadora('calc3')">Calculadora de ICP</button>
+            <button onclick="mostrarCalculadora('calc4')">Calculadora de Mídia Social</button>
         </div>
         <div class="calculadora" id="calc1">        
             <!-- Coleta de Dados do Funil -->
@@ -192,6 +194,87 @@
                 </div>
             </div>
         </div>
+
+        <div class="calculadora" id="calc3">        
+            <!-- Coleta de Dados do ICP/Persona e Apostas -->
+            <div class="section">
+                <h3>Coleta de Dados do Lead</h3>
+            
+                <label for="tamanhoEmpresa">A empresa se classifica dentro do tamanho definido no ICP? (Ex.: Pequena ou média)</label>
+                <input type="checkbox" id="tamanhoEmpresa" value="1" oninput="calcularMediaICP()">
+            
+                <label for="setorAtuacao">O setor em que a empresa atua está alinhado com os setores prioritários definidos no ICP?</label>
+                <input type="checkbox" id="setorAtuacao" value="1" oninput="calcularMediaICP()">
+            
+                <label for="necessidadeSolucoes">A empresa possui necessidades que se enquadram nas soluções digitais que oferecemos?</label>
+                <input type="checkbox" id="necessidadeSolucoes" value="1" oninput="calcularMediaICP()">
+            
+                <label for="tempoAtuacao">A empresa tem pelo menos 5 anos de atuação no mercado, conforme o perfil desejado?</label>
+                <input type="checkbox" id="tempoAtuacao" value="1" oninput="calcularMediaICP()">
+            
+                <label for="faturamento">A empresa está posicionada em um faturamento compatível com o nosso perfil ideal?</label>
+                <input type="checkbox" id="faturamento" value="1" oninput="calcularMediaICP()">
+            
+                <label for="interesseAutomacao">A empresa demonstra interesse por automação de processos, alinhando-se às nossas soluções?</label>
+                <input type="checkbox" id="interesseAutomacao" value="1" oninput="calcularMediaICP()">
+            
+                <label for="localizacao">A localização da empresa está em uma região que priorizamos para nosso mercado-alvo?</label>
+                <input type="checkbox" id="localizacao" value="1" oninput="calcularMediaICP()">
+            
+                <label for="publicoAlvo">A empresa está alinhada com o público-alvo que definimos nas apostas do mês?</label>
+                <input type="checkbox" id="publicoAlvo" value="1" oninput="calcularMediaICP()">
+            
+                <label for="historicoInteracao">A empresa já teve interações anteriores com nossa marca que indicam interesse?</label>
+                <input type="checkbox" id="historicoInteracao" value="1" oninput="calcularMediaICP()">
+            
+                <label for="reputacao">A reputação da empresa, conforme informações disponíveis, reflete o padrão ideal que buscamos?</label>
+                <input type="checkbox" id="reputacao" value="1" oninput="calcularMediaICP()">
+            </div>
+            <div class="section">        
+                <div class="result" id="resultadoMediaICP" style="display: none;">
+                    <span class="info">Avaliação do Lead em relação ao nosso ICP/Persona:</span><br>
+                    <span class="output" id="mediaICP"></span> <br>
+                    <span class="details">Essa pontuação reflete o quanto esse lead se encaixa no nosso perfil ideal de cliente. Quanto mais próximo de 10, melhor o alinhamento com nossas metas!</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="calculadora" id="calc4">        
+            <!-- Análise das Mídias Sociais -->
+            <div class="section">
+                <h3>Análise das Mídias Sociais</h3>
+        
+                <label for="atividadeFrequencia">A empresa tem uma frequência regular de postagens nas mídias sociais?</label>
+                <input type="checkbox" id="atividadeFrequencia" value="1" oninput="calcularAnaliseMidia()">
+        
+                <label for="engajamentoInteracao">Os seguidores interagem com as postagens (curtidas, comentários, compartilhamentos)?</label>
+                <input type="checkbox" id="engajamentoInteracao" value="1" oninput="calcularAnaliseMidia()">
+        
+                <label for="qualidadeConteudo">O conteúdo postado é relevante para o público-alvo?</label>
+                <input type="checkbox" id="qualidadeConteudo" value="1" oninput="calcularAnaliseMidia()">
+        
+                <label for="imagemBranding">A identidade visual da empresa é consistente em todas as plataformas?</label>
+                <input type="checkbox" id="imagemBranding" value="1" oninput="calcularAnaliseMidia()">
+        
+                <label for="campanhasProjetos">A empresa está promovendo campanhas específicas (ex: lançamento de produtos, eventos)?</label>
+                <input type="checkbox" id="campanhasProjetos" value="1" oninput="calcularAnaliseMidia()">
+        
+                <label for="avaliacoesComentarios">A empresa recebe avaliações positivas em suas plataformas sociais?</label>
+                <input type="checkbox" id="avaliacoesComentarios" value="1" oninput="calcularAnaliseMidia()">
+        
+                <label for="usoAnuncios">A empresa investe em anúncios pagos nas redes sociais?</label>
+                <input type="checkbox" id="usoAnuncios" value="1" oninput="calcularAnaliseMidia()">
+            </div>
+        
+            <div class="section">        
+                <div class="result" id="resultadoAnaliseMidia" style="display: none;">
+                    <span class="info">Avaliação das Mídias Sociais:</span> <br>
+                    <span class="output" id="resultadoMediaOutput"></span> <br>
+                    <span class="details">Essa avaliação reflete a presença e estratégia da empresa nas mídias sociais, permitindo criar uma conexão mais forte nas etapas futuras do processo.</span>
+                </div>
+            </div>
+        </div>
+        
     </div>
     <script>
         function calcularMetricas() {
@@ -276,6 +359,60 @@
                 document.getElementById("resultadoMediaTouchpoints").style.display = 'none';
             }
         }
+    </script>
+
+    <script>
+        function calcularMediaICP() {
+            const nota1 = document.getElementById("tamanhoEmpresa").checked ? 1 : 0; // Classificação do Tamanho
+            const nota2 = document.getElementById("setorAtuacao").checked ? 1 : 0; // Setor de Atuação
+            const nota3 = document.getElementById("necessidadeSolucoes").checked ? 1 : 0; // Necessidade de Soluções
+            const nota4 = document.getElementById("tempoAtuacao").checked ? 1 : 0; // Tempo de Atuação
+            const nota5 = document.getElementById("faturamento").checked ? 1 : 0; // Faturamento
+            const nota6 = document.getElementById("interesseAutomacao").checked ? 1 : 0; // Interesse em Automação
+            const nota7 = document.getElementById("localizacao").checked ? 1 : 0; // Localização
+            const nota8 = document.getElementById("publicoAlvo").checked ? 1 : 0; // Alinhamento com o Público-Alvo
+            const nota9 = document.getElementById("historicoInteracao").checked ? 1 : 0; // Histórico de Interação
+            const nota10 = document.getElementById("reputacao").checked ? 1 : 0; // Reputação
+
+            const totalDeNotas = nota1 + nota2 + nota3 + nota4 + nota5 + nota6 + nota7 + nota8 + nota9 + nota10;
+            const totalDeAvaliacoes = 10; // Total de perguntas
+
+            // Cálculo da Média de Avaliação do Lead
+            let mediaICP = (totalDeNotas / totalDeAvaliacoes) * 10; // Escalando para uma pontuação de 0 a 10
+            document.getElementById("mediaICP").innerText = `${mediaICP.toFixed(0)}`; // Resultado com duas casas decimais
+
+            // Exibindo o resultado
+            if (totalDeNotas > 0) {
+                document.getElementById("resultadoMediaICP").style.display = 'block';
+            } else {
+                document.getElementById("resultadoMediaICP").style.display = 'none';
+            }
+        }
+
+    </script>
+
+    <script>
+        function calcularAnaliseMidia() {
+            const atividadeFrequencia = document.getElementById("atividadeFrequencia").checked ? 1 : 0;
+            const engajamentoInteracao = document.getElementById("engajamentoInteracao").checked ? 1 : 0;
+            const qualidadeConteudo = document.getElementById("qualidadeConteudo").checked ? 1 : 0;
+            const imagemBranding = document.getElementById("imagemBranding").checked ? 1 : 0;
+            const campanhasProjetos = document.getElementById("campanhasProjetos").checked ? 1 : 0;
+            const avaliacoesComentarios = document.getElementById("avaliacoesComentarios").checked ? 1 : 0;
+            const usoAnuncios = document.getElementById("usoAnuncios").checked ? 1 : 0;
+
+            const total = atividadeFrequencia + engajamentoInteracao + qualidadeConteudo +
+                        imagemBranding + campanhasProjetos + avaliacoesComentarios + usoAnuncios;
+
+            const numeroDePerguntas = 7; // Total de perguntas
+
+            // Cálculo da Avaliação das Mídias Sociais
+            let avaliacaoMedia = (total / numeroDePerguntas) * 10; // Convertendo para uma escala de 0 a 10
+
+            document.getElementById("resultadoMediaOutput").innerText = `${avaliacaoMedia.toFixed(0)}`;
+            document.getElementById("resultadoAnaliseMidia").style.display = 'block';
+        }
+
     </script>
 
     <script>
