@@ -122,7 +122,13 @@
                 
                 <label for="leadsConvertidos">Vendas realizadas:</label>
                 <input type="number" id="leadsConvertidos" placeholder="Digite o número de leads convertidos" oninput="calcularMetricas()">
-        
+                
+                <label for="leadsCadastrados">Leads cadastrados:</label>
+                <input type="number" id="leadsCadastrados" placeholder="Digite o número de leads cadastrados" oninput="calcularMetricas()">
+
+                <label for="contatosExecutados">Contatos executados:</label>
+                <input type="number" id="contatosExecutados" placeholder="Digite o número de contatos executados" oninput="calcularMetricas()">
+
                 <label for="reunioesDiagnostico">Reuniões de Diagnóstico Apresentadas:</label>
                 <input type="number" id="reunioesDiagnostico" placeholder="Digite o número de reuniões de diagnóstico apresentadas" oninput="calcularMetricas()">
                 
@@ -137,25 +143,49 @@
             </div>
         
             <!-- Resultados dos Cálculos -->
-            <div class="section">        
-                <div class="result" id="resultadoTaxaConversaoProposta">
-                    <span class="info">Taxa de Conversão de Propostas para Clientes:</span> <br>
-                    <span class="output" id="taxaConversaoProposta"></span>
+            <div class="section">
+                <h4>Taxa de conversão de cada etapa com base nos dados atuais</h4>
+
+                <div class="result" id="resultadoTaxaConversaoCadastrado">
+                    <span class="info">Taxa de Conversão de Cadastrado para Contato:</span> <br>
+                    <span class="output" id="taxaConversaoCadastrado"></span>
                 </div>
-        
+
+                <div class="result" id="resultadoTaxaConversaoContato">
+                    <span class="info">Taxa de Conversão de Contato para Diagnóstico:</span> <br>
+                    <span class="output" id="taxaConversaoContato"></span>
+                </div>
+
                 <div class="result" id="resultadoTaxaConversaoDiagnostico">
                     <span class="info">Taxa de Conversão de Diagnósticos para Propostas:</span> <br>
                     <span class="output" id="taxaConversaoDiagnostico"></span>
                 </div>
-        
-                <div class="result" id="resultadoPropostasNecessarias">
-                    <span class="info">Número de Propostas Necessárias:</span> <br>
-                    <span class="output" id="numeroPropostasNecessarias"></span>
+
+                <div class="result" id="resultadoTaxaConversaoProposta">
+                    <span class="info">Taxa de Conversão de Propostas para Clientes:</span> <br>
+                    <span class="output" id="taxaConversaoProposta"></span>
+                </div>
+
+                <h4>Projeções de Métricas</h4>
+
+                <div class="result" id="resultadoCadastrosNecessarios">
+                    <span class="info">Número de Cadastros Necessários:</span> <br>
+                    <span class="output" id="numeroCadastrosNecessarios"></span>
+                </div>
+
+                <div class="result" id="resultadoContatosNecessarios">
+                    <span class="info">Número de Contatos Necessários:</span> <br>
+                    <span class="output" id="numeroContatosNecessarios"></span>
                 </div>
         
                 <div class="result" id="resultadoDiagnosticosNecessarios">
                     <span class="info">Número de Diagnósticos Necessários:</span> <br>
                     <span class="output" id="numeroDiagnosticosNecessarios"></span>
+                </div>
+
+                <div class="result" id="resultadoPropostasNecessarias">
+                    <span class="info">Número de Propostas Necessárias:</span> <br>
+                    <span class="output" id="numeroPropostasNecessarias"></span>
                 </div>
         
                 <div class="result" id="resultadoPessoasNecessarias">
@@ -163,7 +193,8 @@
                     <span class="output" id="numeroPessoasNecessarias"></span>
                 </div>
             </div>
-        </div> 
+        </div>
+
         <div class="calculadora" id="calc2">
             <div class="section">
                 <h3>Coleta de Dados de Touchpoints</h3>
@@ -280,6 +311,8 @@
         function calcularMetricas() {
             const leadsConvertidos = parseFloat(document.getElementById("leadsConvertidos").value);
             const propostasApresentadas = parseFloat(document.getElementById("propostasApresentadas").value);
+            const contatosExecutados = parseFloat(document.getElementById("contatosExecutados").value);
+            const leadsCadastrados = parseFloat(document.getElementById("leadsCadastrados").value);
             const reunioesDiagnostico = parseFloat(document.getElementById("reunioesDiagnostico").value);
             const ticketMedio = parseFloat(document.getElementById("ticketMedio").value);
             const metaFaturamento = parseFloat(document.getElementById("metaFaturamento").value);
@@ -304,7 +337,27 @@
             } else {
                 document.getElementById("resultadoTaxaConversaoDiagnostico").style.display = 'none';
             }
-    
+
+            // Cálculo da Taxa de Conversão de Contato para Diagnóstico
+            let taxaConversaoCadastrado = 0;
+            if (!isNaN(leadsCadastrados) && leadsCadastrados > 0) {
+                taxaConversaoCadastrado = (contatosExecutados / leadsCadastrados) * 100;
+                document.getElementById("taxaConversaoCadastrado").innerText = `${taxaConversaoCadastrado.toFixed(2)}%`;
+                document.getElementById("resultadoTaxaConversaoCadastrado").style.display = 'block';
+            } else {
+                document.getElementById("resultadoTaxaConversaoCadastrado").style.display = 'none';
+            }
+
+            // Cálculo da Taxa de Conversão de Contato para Diagnóstico
+            let taxaConversaoContato = 0;
+            if (!isNaN(contatosExecutados) && contatosExecutados > 0) {
+                taxaConversaoContato = (reunioesDiagnostico / contatosExecutados) * 100;
+                document.getElementById("taxaConversaoContato").innerText = `${taxaConversaoContato.toFixed(2)}%`;
+                document.getElementById("resultadoTaxaConversaoContato").style.display = 'block';
+            } else {
+                document.getElementById("resultadoTaxaConversaoContato").style.display = 'none';
+            }
+
             // Cálculo do Número de Propostas Necessárias
             let numeroPropostasNecessarias = 0;
             if (!isNaN(metaFaturamento) && !isNaN(ticketMedio) && ticketMedio > 0 && taxaConversaoProposta > 0) {
@@ -334,6 +387,27 @@
             } else {
                 document.getElementById("resultadoPessoasNecessarias").style.display = 'none';
             }
+
+            // Cálculo do Número de Contatos Necessários
+            let numeroContatosNecessarios = 0;
+            if (!isNaN(metaFaturamento) && !isNaN(ticketMedio) && ticketMedio > 0 && taxaConversaoDiagnostico > 0) {
+                numeroContatosNecessarios = numeroDiagnosticosNecessarios / (taxaConversaoContato / 100);
+                document.getElementById("numeroContatosNecessarios").innerText = `${Math.ceil(numeroContatosNecessarios)}`;
+                document.getElementById("resultadoContatosNecessarios").style.display = 'block';
+            } else {
+                document.getElementById("resultadoContatosNecessarios").style.display = 'none';
+            }
+
+            // Cálculo do Número de Contatos Necessários
+            let numeroCadastrosNecessarios = 0;
+            if (!isNaN(metaFaturamento) && !isNaN(ticketMedio) && ticketMedio > 0 && taxaConversaoContato > 0) {
+                numeroCadastrosNecessarios = numeroContatosNecessarios / (taxaConversaoCadastrado / 100);
+                document.getElementById("numeroCadastrosNecessarios").innerText = `${Math.ceil(numeroCadastrosNecessarios)}`;
+                document.getElementById("resultadoCadastrosNecessarios").style.display = 'block';
+            } else {
+                document.getElementById("resultadoCadastrosNecessarios").style.display = 'none';
+            }
+    
         }
     </script>
 
